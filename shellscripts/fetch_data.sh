@@ -1,8 +1,8 @@
 # bin/bash
 
 DATA_DIR=data/editions
-REPO=acdh-data
-ORG=acdh-oeaw
+REPO=abc-data
+ORG=austrian-baroque-corpus
 BRANCH=main
 
 echo "fetching transkriptions from data repo..."
@@ -14,7 +14,7 @@ echo "unzipping data..."
 unzip $BRANCH
 
 echo "moving data to $DATA_DIR..."
-mkdir ./$DATA_DIR
+mkdir ./data
 mkdir ./$DATA_DIR
 mv ./$REPO-$BRANCH/$DATA_DIR/*.xml ./$DATA_DIR
 

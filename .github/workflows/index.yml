@@ -29,40 +29,40 @@ jobs:
       - name: Fetch data
         run: ./shellscripts/fetch_data.sh
 
-  typesense_index:
-    needs: [fetch_data]
-    name: Build Typesense Index
-    runs-on: ubuntu-latest
-    env:
-      TYPESENSE_HOST: typesense.acdh-dev.oeaw.ac.at
-      TYPESENSE_PORT: 443
-      TYPESENSE_PROTOCOL: https
-      TYPESENSE_API_KEY: ${{ secrets.TYPESENSE_API_KEY }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Use Cache
-        uses: actions/cache@v4
-        env:
-          cache-name: cache-site-build
-        with:
-          path: ./${{ github.env.DATA_DIR }}
-          key:
-            build-${{ env.cache-name }}-${{ hashFiles('**/fetch-data.sh') }}
-          restore-keys: |
-            build-${{ env.cache-name }}-
-            build-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-          cache: "pipenv"
-      - name: Install dependencies
-        run: |
-          python --version
-          python -m pip install pipenv
-          pipenv install
-      - name: Build and upload typesense index
-        run: pipenv run python typesense/mk_index.py
+  # typesense_index:
+  #   needs: [fetch_data]
+  #   name: Build Typesense Index
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     TYPESENSE_HOST: typesense.acdh-dev.oeaw.ac.at
+  #     TYPESENSE_PORT: 443
+  #     TYPESENSE_PROTOCOL: https
+  #     TYPESENSE_API_KEY: ${{ secrets.TYPESENSE_API_KEY }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Use Cache
+  #       uses: actions/cache@v4
+  #       env:
+  #         cache-name: cache-site-build
+  #       with:
+  #         path: ./${{ github.env.DATA_DIR }}
+  #         key:
+  #           build-${{ env.cache-name }}-${{ hashFiles('**/fetch-data.sh') }}
+  #         restore-keys: |
+  #           build-${{ env.cache-name }}-
+  #           build-
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v5
+  #       with:
+  #         python-version: "3.10"
+  #         cache: "pipenv"
+  #     - name: Install dependencies
+  #       run: |
+  #         python --version
+  #         python -m pip install pipenv
+  #         pipenv install
+  #     - name: Build and upload typesense index
+  #       run: pipenv run python typesense/mk_index.py
   
   noske_index:
     needs: [fetch_data]
