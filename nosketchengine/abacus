@@ -11,7 +11,7 @@ VERTICAL "| ls /var/lib/manatee/data/verticals/abacus/*.tsv | xargs cat"
 
 ENCODING "utf-8"
 MAINTAINER "daniel.elsner@oeaw.ac.at"
-LANGUAGE "17th Century German"
+LANGUAGE "17th/18th Century German"
 TAGSETDOC ""
 
 
@@ -38,12 +38,12 @@ ATTRIBUTE "id" {
 }
 
 ## column #5
-ATTRIBUTE "ent_key" {
+ATTRIBUTE "placeName" {
 	TYPE "MD_MI"
 }
 
 ## column #6
-ATTRIBUTE "ent_type" {
+ATTRIBUTE "persName" {
 	TYPE "MD_MI"
 }
 

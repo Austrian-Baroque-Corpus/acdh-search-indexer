@@ -26,9 +26,10 @@ STRUCTURES = [
     "tei:titlePage"
 ]
 
-# STRUCUTRE_ATTRIBUTES = [
-#     "@xml:id"
-# ]
+ENTITIES = [
+    "ancestor::tei:placeName/@key",
+    "ancestor::tei:persName/@key"
+]
 
 TAGS = [
     "tei:w",
@@ -119,53 +120,35 @@ def extract_tags_from_structures(doc_structures: list, tags: list) -> Generator[
         yield tag_nodes
 
 
-def extract_tag_attributes(doc_tags: list, tag_attributes: list) -> Generator[Any, Any, Any]:
+def iterate_attrs(tag: any, attributes: list, list: list) -> list:
+    for attr in attributes:
+        try:
+            val = tag.xpath(attr, namespaces=NS)[0]
+        except IndexError:
+            # missing xml:id in Abraham-Mercks_Wien before w with xml:id MW_d1e185558
+            val = ""
+        list.append(val)
+    return list
+
+
+def extract_tag_attributes(doc_tags: list, tag_attributes: list, entities: list) -> Generator[Any, Any, Any]:
     for tag in doc_tags:
         if isinstance(tag, list):
             for subtag in tag:
                 match subtag.tag:
                     case "{http://www.tei-c.org/ns/1.0}pc":
-                        yield [""]
+                        yield []
                     case _:
-                        tag_attributes_values = []
-                        try:
-                            entity = subtag.xpath("ancestor::tei:placeName|ancestor::tei:persName", namespaces=NS)[0]
-                            ent_key = entity.xpath("@key")[0]
-                            ent_type = entity.xpath("@type")[0]
-                        except IndexError:
-                            ent_key = ""
-                            ent_type = ""
-                        for x in tag_attributes:
-                            try:
-                                val = subtag.xpath(x)[0]
-                            except IndexError:
-                                # missing xml:id in Abraham-Mercks_Wien before w with xml:id MW_d1e185558
-                                val = "MW_d1e178self"
-                            tag_attributes_values.append(val)
-                        tag_attributes_values.append(ent_key)
-                        tag_attributes_values.append(ent_type)
+                        tag_attributes_values = iterate_attrs(subtag, tag_attributes, [])
+                        tag_attributes_values = iterate_attrs(subtag, entities, tag_attributes_values)
                         yield tag_attributes_values
         else:
             match tag.tag:
                 case "{http://www.tei-c.org/ns/1.0}pc":
-                    yield [""]
+                    yield []
                 case _:
-                    tag_attributes_values = []
-                    try:
-                        entity = tag.xpath("ancestor::tei:placeName|ancestor::tei:persName", namespaces=NS)[0]
-                        ent_key = entity.xpath("@key")[0]
-                        ent_type = entity.xpath("@type")[0]
-                    except IndexError:
-                        ent_key = ""
-                        ent_type = ""
-                    for x in tag_attributes:
-                        try:
-                            val = tag.xpath(x)[0]
-                        except IndexError:
-                            val = ""
-                        tag_attributes_values.append(val)
-                    tag_attributes_values.append(ent_key)
-                    tag_attributes_values.append(ent_type)
+                    tag_attributes_values = iterate_attrs(tag, tag_attributes, [])
+                    tag_attributes_values = iterate_attrs(tag, entities, tag_attributes_values)
                     yield tag_attributes_values
 
 
@@ -205,7 +188,7 @@ def write_to_tsv(output_file: str, data_text: list, data_attributes: list) -> No
 def create_verticals(doc: TeiReader, output_filename) -> None:
     doc_structures = extract_structure(doc, STRUCTURES)
     doc_tags = exhaust(extract_tags_from_structures(doc_structures, TAGS))
-    doc_tag_attributes = exhaust(extract_tag_attributes(doc_tags, TAG_ATTRIBUTES))
+    doc_tag_attributes = exhaust(extract_tag_attributes(doc_tags, TAG_ATTRIBUTES, ENTITIES))
     doc_text = exhaust(extract_text_from_tags(doc_tags, BLACKLIST))
     output_file = os.path.join(output_filepath, "verticals", f"{output_filename}.tsv")
     write_to_tsv(output_file, doc_text, doc_tag_attributes)
