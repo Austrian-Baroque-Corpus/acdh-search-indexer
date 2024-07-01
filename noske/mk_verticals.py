@@ -127,15 +127,46 @@ def extract_tag_attributes(doc_tags: list, tag_attributes: list) -> Generator[An
                     case "{http://www.tei-c.org/ns/1.0}pc":
                         yield [""]
                     case _:
-                        tag_attributes_text = subtag.xpath(list_to_xpaths(tag_attributes), namespaces=NS)
-                        yield tag_attributes_text
+                        tag_attributes_values = []
+                        try:
+                            entity = subtag.xpath("ancestor::tei:placeName|ancestor::tei:persName", namespaces=NS)[0]
+                            ent_key = entity.xpath("@key")[0]
+                            ent_type = entity.xpath("@type")[0]
+                        except IndexError:
+                            ent_key = ""
+                            ent_type = ""
+                        for x in tag_attributes:
+                            try:
+                                val = subtag.xpath(x)[0]
+                            except IndexError:
+                                # missing xml:id in Abraham-Mercks_Wien before w with xml:id MW_d1e185558
+                                val = "MW_d1e178self"
+                            tag_attributes_values.append(val)
+                        tag_attributes_values.append(ent_key)
+                        tag_attributes_values.append(ent_type)
+                        yield tag_attributes_values
         else:
             match tag.tag:
                 case "{http://www.tei-c.org/ns/1.0}pc":
                     yield [""]
                 case _:
-                    tag_attributes_text = tag.xpath(list_to_xpaths(tag_attributes), namespaces=NS)
-                    yield tag_attributes_text
+                    tag_attributes_values = []
+                    try:
+                        entity = tag.xpath("ancestor::tei:placeName|ancestor::tei:persName", namespaces=NS)[0]
+                        ent_key = entity.xpath("@key")[0]
+                        ent_type = entity.xpath("@type")[0]
+                    except IndexError:
+                        ent_key = ""
+                        ent_type = ""
+                    for x in tag_attributes:
+                        try:
+                            val = tag.xpath(x)[0]
+                        except IndexError:
+                            val = ""
+                        tag_attributes_values.append(val)
+                    tag_attributes_values.append(ent_key)
+                    tag_attributes_values.append(ent_type)
+                    yield tag_attributes_values
 
 
 def extract_text_from_tags(doc_tags: list, blacklist: list) -> Generator[Any, Any, Any]:
@@ -164,7 +195,8 @@ def exhaust(generator) -> list:
 def write_to_tsv(output_file: str, data_text: list, data_attributes: list) -> None:
     with open(output_file, "a", encoding="utf-8") as f:
         doc_id = os.path.basename(output_file).replace(".tsv", "")
-        f.write(f'<doc id="{doc_id}" attrs="word lemma type">\n')
+        title = doc_id.replace("_", " ")
+        f.write(f'<doc id="{doc_id}" title="{title}" attrs="word lemma type">\n')
         for idx, text in enumerate(data_text) if data_text else []:
             f.write(text + "\t" + "\t".join(data_attributes[idx]) + "\n")
         f.write("</doc>\n")

@@ -37,6 +37,16 @@ ATTRIBUTE "id" {
 	TYPE "MD_MI"
 }
 
+## column #5
+ATTRIBUTE "ent_key" {
+	TYPE "MD_MI"
+}
+
+## column #6
+ATTRIBUTE "ent_type" {
+	TYPE "MD_MI"
+}
+
 ########## STRUCTURES ############
 
 ### EDIT ATTRIBUTES - PROPERTIES MANUALLY! (e.g. MULTIVALUE, MAXLISTSIZE, ...
@@ -47,6 +57,12 @@ STRUCTURE "doc" {
 	TYPE "map32"
 
 	ATTRIBUTE "id" {
+		TYPE "MD_MI"
+ 	  #	MULTIVALUE y
+        #   MULTISEP " "
+	}
+
+	ATTRIBUTE "title" {
 		TYPE "MD_MI"
  	  #	MULTIVALUE y
         #   MULTISEP " "
