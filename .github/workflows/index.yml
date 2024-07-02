@@ -11,7 +11,7 @@ env:
 
 jobs:
   fetch_data:
-    name: Fetch Data from ${{ github.env.DATA_DIR }}
+    name: Fetch Data from data/editions
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,7 +20,7 @@ jobs:
         env:
           cache-name: cache-site-build
         with:
-          path: ./${{ github.env.DATA_DIR }}
+          path: ./data/editions
           key:
             build-${{ env.cache-name }}-${{ hashFiles('**/fetch-data.sh') }}
           restore-keys: |
@@ -45,7 +45,7 @@ jobs:
   #       env:
   #         cache-name: cache-site-build
   #       with:
-  #         path: ./${{ github.env.DATA_DIR }}
+  #         path: ./data/editions
   #         key:
   #           build-${{ env.cache-name }}-${{ hashFiles('**/fetch-data.sh') }}
   #         restore-keys: |
@@ -76,7 +76,7 @@ jobs:
           cache-name: cache-site-build
         with:
           path: |
-            ./${{ github.env.DATA_DIR }}
+            ./data/editions
           key:
             build-${{ env.cache-name }}-${{ hashFiles('**/fetch-data.sh') }}
           restore-keys: |
@@ -104,7 +104,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ghcr.io/${{ github.env.ORG }}/${{ github.env.REPO }}/${{ github.env.PROJECT }}
+            ghcr.io/austrian-baroque-corpus/acdh-search-indexer/noske-abacus
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -135,8 +135,8 @@ jobs:
     uses: austrian-baroque-corpus/gl-autodevops-minimal-port/.github/workflows/deploy.yml@main
     secrets: inherit
     with:
-      DOCKER_TAG: ghcr.io/${{ github.env.ORG }}/${{ github.env.REPO }}/${{ github.env.PROJECT }}:latest
-      APP_NAME: "${{ github.env.PROJECT }}"
+      DOCKER_TAG: ghcr.io/austrian-baroque-corpus/acdh-search-indexer/noske-abacus:latest
+      APP_NAME: "noske-abacus"
       APP_ROOT: "/"
       POSTGRES_ENABLED: false
       environment: "${{ github.ref_name }}"
