@@ -4,7 +4,7 @@ on:
   workflow_dispatch: {}
 
 env:
-  ORG: austrian-baroque-corpus
+  ORG: Austrian-Baroque-Corpus
   REPO: acdh-search-indexer
   DATA_DIR: data/editions
   PROJECT: noske-abacus
@@ -104,7 +104,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ghcr.io/austrian-baroque-corpus/acdh-search-indexer/noske-abacus
+            ghcr.io/Austrian-Baroque-Corpus/acdh-search-indexer/noske-abacus
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -132,10 +132,10 @@ jobs:
   
   _3:
     needs: [noske_index]
-    uses: austrian-baroque-corpus/gl-autodevops-minimal-port/.github/workflows/deploy.yml@main
+    uses: Austrian-Baroque-Corpus/gl-autodevops-minimal-port/.github/workflows/deploy.yml@main
     secrets: inherit
     with:
-      DOCKER_TAG: ghcr.io/austrian-baroque-corpus/acdh-search-indexer/noske-abacus:latest
+      DOCKER_TAG: ghcr.io/Austrian-Baroque-Corpus/acdh-search-indexer/noske-abacus:latest
       APP_NAME: "noske-abacus"
       APP_ROOT: "/"
       POSTGRES_ENABLED: false
