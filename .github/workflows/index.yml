@@ -4,10 +4,10 @@ on:
   workflow_dispatch: {}
 
 env:
-  ORG: acdh-oeaw
-  REPO: acdh-indexer
+  ORG: austrian-baroque-corpus
+  REPO: acdh-search-indexer
   DATA_DIR: data/editions
-  PROJECT: acdh-indexer
+  PROJECT: noske-abacus
 
 jobs:
   fetch_data:
@@ -132,7 +132,7 @@ jobs:
   
   _3:
     needs: [noske_index]
-    uses: acdh-oeaw/gl-autodevops-minimal-port/.github/workflows/deploy.yml@main
+    uses: austrian-baroque-corpus/gl-autodevops-minimal-port/.github/workflows/deploy.yml@main
     secrets: inherit
     with:
       DOCKER_TAG: ghcr.io/${{ github.env.ORG }}/${{ github.env.REPO }}/${{ github.env.PROJECT }}:latest

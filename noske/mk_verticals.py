@@ -179,7 +179,7 @@ def write_to_tsv(output_file: str, data_text: list, data_attributes: list) -> No
     with open(output_file, "a", encoding="utf-8") as f:
         doc_id = os.path.basename(output_file).replace(".tsv", "")
         title = doc_id.replace("_", " ")
-        f.write(f'<doc id="{doc_id}" title="{title}" attrs="word lemma type">\n')
+        f.write(f'<doc id="{doc_id}" title="{title}" attrs="word lemma type id placeName persName">\n')
         for idx, text in enumerate(data_text) if data_text else []:
             f.write(text + "\t" + "\t".join(data_attributes[idx]) + "\n")
         f.write("</doc>\n")
