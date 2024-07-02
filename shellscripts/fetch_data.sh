@@ -1,8 +1,8 @@
 # bin/bash
 
 DATA_DIR=data/editions
-REPO=acdh-data
-ORG=acdh-oeaw
+REPO=abc-data
+ORG=austrian-baroque-corpus
 BRANCH=main
 
 echo "fetching transkriptions from data repo..."
