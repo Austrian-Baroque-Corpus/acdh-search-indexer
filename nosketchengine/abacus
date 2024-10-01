@@ -47,6 +47,11 @@ ATTRIBUTE "persName" {
 	TYPE "MD_MI"
 }
 
+## column #7
+ATTRIBUTE "pbId" {
+	TYPE "MD_MI"
+}
+
 ########## STRUCTURES ############
 
 ### EDIT ATTRIBUTES - PROPERTIES MANUALLY! (e.g. MULTIVALUE, MAXLISTSIZE, ...

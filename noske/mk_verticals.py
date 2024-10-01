@@ -28,7 +28,8 @@ STRUCTURES = [
 
 ENTITIES = [
     "ancestor::tei:placeName/@key",
-    "ancestor::tei:persName/@key"
+    "ancestor::tei:persName/@key",
+    "preceding::tei:pb[1]/@xml:id"
 ]
 
 TAGS = [
