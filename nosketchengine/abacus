@@ -28,7 +28,7 @@ ATTRIBUTE "lemma" {
 }
 
 ## column #3
-ATTRIBUTE "type" {
+ATTRIBUTE "pos" {
 	TYPE "MD_MI"
 }
 
